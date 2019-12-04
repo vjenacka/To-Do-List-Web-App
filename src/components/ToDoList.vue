@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="todo-list">
-      <div class="item" v-for="(item,index) in todoList" :key="index">
+      <div class="item" v-for="(item,index) in todoList" :key="index" :class="{'show':item.show}">
         <div class="item-checkbox">
           <i class="fas fa-square"></i>
         </div>
@@ -56,6 +56,10 @@ export default {
           // push new item on last position
           this.todoList.push(newEntry);
         }
+        //will 'transition' the element when found and display it on the list
+        setTimeout(() => {
+          this.todoList.find(element => element.id === newEntry.id).show = true;
+        }, 10);
       }
 
       this.entry = "";
@@ -70,17 +74,18 @@ export default {
   padding: 10px;
   width: calc(100% - 20px);
   min-height: calc(100% - 20px);
-  //feature icon class
-  .feature-icon {
+
+  @mixin feature-icon($color) {
     grid-column-start: 3;
     grid-column-end: 3;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #fff;
+    color: $color;
     font-size: 2rem;
     cursor: pointer;
   }
+
   //form for adding to-dos
   .add-item {
     display: grid;
@@ -119,6 +124,56 @@ export default {
       &:focus {
         outline: none;
       }
+    }
+
+    .feature-icon {
+      @include feature-icon(#fff);
+    }
+  }
+
+  //todo list styling
+  .todo-list {
+    padding-top: 20px;
+
+    //single todo
+    .item {
+      display: grid;
+      grid-template-columns: 70px auto 70px;
+      grid-template-rows: 60px;
+      width: 100%;
+      height: 60px;
+      margin-bottom: 2px;
+      background: rgba($color: #fff, $alpha: 0.8);
+      border-radius: 5px;
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.5s linear;
+      .item-checkbox {
+        grid-column-start: 1;
+        grid-column-end: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.6rem;
+        color: #99c191;
+        cursor: pointer;
+      }
+      .item-title {
+        grid-column-start: 2;
+        grid-column-end: 2;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 1.6rem;
+      }
+
+      .feature-icon {
+        @include feature-icon(#333);
+      }
+    }
+
+    .show {
+      opacity: 1;
     }
   }
 }
