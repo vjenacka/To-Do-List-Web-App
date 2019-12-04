@@ -39,8 +39,8 @@
         :class="{'show':item.show}"
       >
         <div class="item-checkbox">
-          <i v-if="!item.complete" class="fas fa-square" @click="uncompleteItem(item)"></i>
-          <i v-else class="fas fa-check-square"></i>
+          <i v-if="!item.complete" class="fas fa-square"></i>
+          <i v-else class="fas fa-check-square" @click="uncompleteItem(item)"></i>
         </div>
         <div class="item-title">{{item.title}}</div>
         <div class="feature-icon" :class="{'red-bg': item.favorite}">
@@ -120,9 +120,17 @@ export default {
       item.show = false;
 
       setTimeout(() => {
-        if(item.favorite){
-            this.todoList.splice
+        if (item.favorite) {
+          this.todoList.splice(0, 0, item);
+        } else {
+          this.todoList.push(item);
         }
+
+        let index = this.completedToDoList.findIndex(
+          element => element.id === item.id
+        );
+        this.completedToDoList.splice(index, 1);
+        item.show = true;
       }, 500);
     }
   }
